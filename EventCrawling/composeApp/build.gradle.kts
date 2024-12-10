@@ -82,7 +82,6 @@ android {
 }
 
 dependencies {
-    implementation(libs.protolite.well.known.types)
     debugImplementation(compose.uiTooling)
 }
 
