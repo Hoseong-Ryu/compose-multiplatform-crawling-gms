@@ -1,13 +1,15 @@
 package org.dvhs.crawling.ui
 
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
+import org.dvhs.crawling.ui.theme.GameHelperTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 @Preview
 fun App() {
-    MaterialTheme {
-        TimeManagementScreen()
+    GameHelperTheme {
+        TimeScreen(
+            onClose = {}
+        )
     }
 }
