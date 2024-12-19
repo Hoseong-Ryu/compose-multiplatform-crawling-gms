@@ -1,4 +1,4 @@
-package org.dvhs.crawling.ui.component
+package org.dvhs.crawling.ui.component.time
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
