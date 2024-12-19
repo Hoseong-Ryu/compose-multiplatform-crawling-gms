@@ -9,11 +9,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import kotlinx.datetime.LocalDateTime
 
 @Composable
 fun TimeSection(
     title: String,
-    time: String,
+    time: LocalDateTime?,
     timeStyle: TextStyle,
     modifier: Modifier = Modifier
 ) {
@@ -25,8 +26,17 @@ fun TimeSection(
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = time,
+            text = time?.formatWithPadding() ?: "Loading...",
             style = timeStyle
         )
     }
+}
+
+fun LocalDateTime.formatWithPadding(): String {
+    return "${year}-" +
+            "${monthNumber.toString().padStart(2, '0')}-" +
+            "${dayOfMonth.toString().padStart(2, '0')} " +
+            "${hour.toString().padStart(2, '0')}:" +
+            "${minute.toString().padStart(2, '0')}:" +
+            second.toString().padStart(2, '0')
 }

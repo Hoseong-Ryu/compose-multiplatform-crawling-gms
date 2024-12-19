@@ -1,17 +1,33 @@
 package org.dvhs.crawling.ui.viewmodel
 
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.datetime.*
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.plus
+import kotlinx.datetime.toInstant
+import kotlinx.datetime.toLocalDateTime
+import kotlinx.datetime.until
 import org.dvhs.crawling.domain.model.GameContent
 
 class TimeViewModel {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
-    private val _currentServerTime = MutableStateFlow<Instant?>(null)
-    val currentServerTime: StateFlow<Instant?> = _currentServerTime.asStateFlow()
+    private val _currentTime = MutableStateFlow<Instant?>(null)
+    val currentTime: StateFlow<Instant?> = _currentTime.asStateFlow()
 
     private val _gameContents = MutableStateFlow<List<GameContent>>(emptyList())
     val gameContents: StateFlow<List<GameContent>> = _gameContents.asStateFlow()
@@ -37,7 +53,7 @@ class TimeViewModel {
     }
 
     private fun updateCurrentTime() {
-        _currentServerTime.value = Clock.System.now()
+        _currentTime.value = Clock.System.now()
     }
 
     private fun calculateNextReset(content: GameContent, currentTime: LocalDateTime): LocalDateTime {
@@ -74,7 +90,7 @@ class TimeViewModel {
     }
 
     private fun updateUpcomingResets() {
-        val currentInstant = _currentServerTime.value ?: return
+        val currentInstant = _currentTime.value ?: return
         val currentServerDateTime = currentInstant.toLocalDateTime(TimeZone.UTC)
         val contents = _gameContents.value
 
@@ -104,7 +120,7 @@ class TimeViewModel {
     // StateFlow를 각 플랫폼의 네이티브 상태 관리 시스템으로 변환하는 메서드들
     fun collectCurrentServerTime(callback: (Instant?) -> Unit) {
         scope.launch {
-            currentServerTime.collect { callback(it) }
+            currentTime.collect { callback(it) }
         }
     }
 
